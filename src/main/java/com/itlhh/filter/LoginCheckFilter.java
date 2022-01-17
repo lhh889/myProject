@@ -1,6 +1,7 @@
 package com.itlhh.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.itlhh.common.BaseContext;
 import com.itlhh.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -31,6 +32,8 @@ public class LoginCheckFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+
+
         //获取本次请求uri
         String requestURI = request.getRequestURI();
 
@@ -56,6 +59,14 @@ public class LoginCheckFilter implements Filter {
         //4、判断登录状态，如果已登录，则直接放行
         if (request.getSession().getAttribute("employee")!=null){
             log.info("本次登录的id:{}",request.getSession().getAttribute("employee"));
+            //输出日志
+            long id = Thread.currentThread().getId();
+            log.info("线程id为:{}",id);
+
+            //将当前登录用户ID存入ThreadLocal
+            Long empid = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empid);
+
             filterChain.doFilter(request,response);
             return;
         }
@@ -67,15 +78,15 @@ public class LoginCheckFilter implements Filter {
     }
 
     private boolean check(String[] urls, String requestURI) {
-/*        for (String url : urls) {
+        for (String url : urls) {
             boolean match = PATH_MATCHER.match(url, requestURI);
             if (match){
 
                 return true;
             }
         }
-        return false;*/
-        return true;
+        return false;
+       // return true;
     }
 
 }

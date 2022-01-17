@@ -33,6 +33,13 @@ public class EmployeeController {
     @Value("${autoPassword}")
     private String autoPassword;
 
+    /**
+     * 登录功能
+     *
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
 
@@ -97,6 +104,7 @@ public class EmployeeController {
 
     /**
      * 新增功能
+     *
      * @param request
      * @param employee
      * @return
@@ -109,7 +117,7 @@ public class EmployeeController {
         //将加密后的密码添加到emplpyee中
         employee.setPassword(s);
 
-        //设置创建时间
+/*        //设置创建时间
         LocalDateTime localDateTime = LocalDateTime.now();
         employee.setCreateTime(localDateTime);
 
@@ -120,8 +128,7 @@ public class EmployeeController {
         employee.setCreateUser(createUser);
 
         //修改者id
-        employee.setUpdateUser(createUser);
-
+        employee.setUpdateUser(createUser);*/
         employeeService.save(employee);
 
         return R.success("新增员工成功");
@@ -168,19 +175,22 @@ public class EmployeeController {
 
     /**
      * 根据id修改员工信息
+     *
      * @param request
      * @param employee
      * @return
      */
     @PutMapping
-    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
-       // log.info("收到请求了");
-       // log.info(employee.toString());
-        Long empId = (Long) request.getSession().getAttribute("employee");
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        // log.info("收到请求了");
+        // log.info(employee.toString());
+/*        Long empId = (Long) request.getSession().getAttribute("employee");
         log.info("id={}",empId);
 
         employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(empId);
+        employee.setUpdateUser(empId);*/
+        long id = Thread.currentThread().getId();
+        log.info("线程id为:{}", id);
 
         employeeService.updateById(employee);
 
@@ -189,16 +199,17 @@ public class EmployeeController {
 
     /**
      * 根据id查询信息,回显数据
+     *
      * @param request
      * @param id
      * @return
      */
     @GetMapping("/{id}")
-    public R<Employee>  getById(HttpServletRequest request , @PathVariable Long id){
+    public R<Employee> getById(HttpServletRequest request, @PathVariable Long id) {
         //log.info("id={}",id);
 
         Employee employee = employeeService.getById(id);
-        if (employee!=null){
+        if (employee != null) {
             return R.success(employee);
         }
 
