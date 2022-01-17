@@ -30,7 +30,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @Value("autoPassword")
+    @Value("${autoPassword}")
     private String autoPassword;
 
     @PostMapping("/login")
@@ -95,6 +95,12 @@ public class EmployeeController {
         return R.success("退出成功");
     }
 
+    /**
+     * 新增功能
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping
     public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
         log.info("开始新增");
@@ -160,7 +166,12 @@ public class EmployeeController {
         return R.success(pageInfo);
     }
 
-
+    /**
+     * 根据id修改员工信息
+     * @param request
+     * @param employee
+     * @return
+     */
     @PutMapping
     public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
        // log.info("收到请求了");
@@ -183,7 +194,7 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/{id}")
-    public R  getById(HttpServletRequest request , @PathVariable Long id){
+    public R<Employee>  getById(HttpServletRequest request , @PathVariable Long id){
         //log.info("id={}",id);
 
         Employee employee = employeeService.getById(id);
