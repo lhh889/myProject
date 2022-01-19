@@ -20,3 +20,6 @@ mybatis-plus:
       id-type: ASSIGN_ID
 
 autoPassword: 123456
+
+reggie:
+  path: E:\img\
