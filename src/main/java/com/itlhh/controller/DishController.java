@@ -131,4 +131,25 @@ public class DishController {
 
         return R.success("删除成功");
     }
+
+    /**
+     * 修改起售停售
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public R statusA(@PathVariable int status,Long[] ids){
+        log.info("ids==={}",ids);
+
+        for (Long id : ids) {
+            Dish byId = dishService.getById(id);
+
+            byId.setStatus(status);
+
+            dishService.updateById(byId);
+        }
+
+        return R.success("停售成功");
+    }
 }
