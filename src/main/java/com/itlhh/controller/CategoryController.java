@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @Author lhh
  * @Date 2022/1/17 16:47
@@ -39,6 +41,7 @@ public class CategoryController {
 
     /**
      * 分页查询
+     *
      * @param page
      * @param pageSize
      * @return
@@ -61,12 +64,13 @@ public class CategoryController {
 
     /**
      * 根据id删除分类
+     *
      * @param id
      * @return
      */
     @DeleteMapping
-    public R<String> delete(Long id){
-        log.info("需要删除的id:{}",id);
+    public R<String> delete(Long id) {
+        log.info("需要删除的id:{}", id);
         log.info("删除请求收到了");
 
         //执行删除
@@ -76,9 +80,28 @@ public class CategoryController {
     }
 
     @PutMapping
-    public R<String> update(@RequestBody Category category){
+    public R<String> update(@RequestBody Category category) {
 
         categoryService.updateById(category);
         return R.success("分类信息修改成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+
+        //添加条件
+        queryWrapper.eq(category.getType() != null,Category::getType,category.getType());
+
+        System.out.println(category.getType()+"===============");
+
+        //1.按照sort字段升序排序
+        queryWrapper.orderByAsc(Category::getSort);
+        //2.sort相同则按照修改时间降序排序
+        queryWrapper.orderByDesc(Category::getUpdateTime);
+
+        //执行查询
+        List<Category> categoryList = categoryService.list(queryWrapper);
+        return R.success(categoryList);
     }
 }

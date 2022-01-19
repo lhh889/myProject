@@ -2,8 +2,10 @@ package com.itlhh;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.itlhh.common.R;
+import com.itlhh.entity.DishFlavor;
 import com.itlhh.entity.Employee;
 import com.itlhh.mapper.EmployeeMapper;
+import com.itlhh.service.DishFlavorService;
 import com.itlhh.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,14 @@ import java.util.List;
 public class ReggieApplicationT {
 
 
-    @Autowired
-    private EmployeeService employeeService;
-    @Test
 
+    @Autowired
+    private DishFlavorService dishFlavorService;
+
+    @Test
     public void test(){
-        List<Employee> list = employeeService.list();
-        System.out.println(list);
+        List<DishFlavor> dishFlavorList = dishFlavorService.list();
+
+        System.out.println(dishFlavorList);
     }
 }

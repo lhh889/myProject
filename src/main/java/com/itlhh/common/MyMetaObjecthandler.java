@@ -35,6 +35,7 @@ public class MyMetaObjecthandler implements MetaObjectHandler {
 
     }
 
+
     /**
      * 更新操作,自动填充
      * @param metaObject
@@ -50,4 +51,6 @@ public class MyMetaObjecthandler implements MetaObjectHandler {
         metaObject.setValue("updateTime",LocalDateTime.now());
         metaObject.setValue("updateUser",BaseContext.getCurrentId());
     }
+
+
 }
