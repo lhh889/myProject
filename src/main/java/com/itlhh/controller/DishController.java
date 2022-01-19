@@ -94,4 +94,41 @@ public class DishController {
             res.setRecords(resRecords);
             return R.success(res);
     }
+
+    /**
+     * 根据id查询数据,回显数据
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<DishDto> get(@PathVariable Long id){
+
+        DishDto dishDto = dishService.getByIdWithFlavor(id);
+        if (dishDto!=null){
+            return R.success(dishDto);
+        }
+        return R.error("没有该信息");
+    }
+
+    /**
+     *修改数据
+     * @param dishDto
+     * @return
+     */
+    @PutMapping
+   public R<String> update(@RequestBody DishDto dishDto){
+
+            dishService.updateWithFlavor(dishDto);
+            return R.success("修改成功");
+
+    }
+
+    @DeleteMapping
+    public R<String> delete(Long ids){
+        log.info("ids====={}",ids);
+
+        dishService.deleteWithFlavor(ids);
+
+        return R.success("删除成功");
+    }
 }
