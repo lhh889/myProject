@@ -75,6 +75,9 @@ public class DishController {
 
         List<DishVO> resRecords = new ArrayList<>();
 
+        res.setTotal(pageInfo.getTotal());
+        res.setCountId(pageInfo.getCountId());
+
         for (Dish record : records) {
             //开始补全
             DishVO dishVO = new DishVO();
@@ -123,11 +126,16 @@ public class DishController {
 
     }
 
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
     @DeleteMapping
-    public R<String> delete(Long ids){
+    public R<String> delete(@RequestParam  List<Long> ids){
         log.info("ids====={}",ids);
 
-        dishService.deleteWithFlavor(ids);
+        dishService.removeWithDish(ids);
 
         return R.success("删除成功");
     }
