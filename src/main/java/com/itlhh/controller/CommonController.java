@@ -27,7 +27,7 @@ import java.util.UUID;
 @RequestMapping("/common")
 @Slf4j
 public class CommonController {
-
+    //通过@Value获取yml文件的值
     @Value("${reggie.path}")
     private String basePath;
 
@@ -51,9 +51,11 @@ public class CommonController {
         //使用UUID重新生成文件名，防止文件名称重复造成文件覆盖
         String fileName = UUID.randomUUID().toString() + suffix;
         //log.info("生成新的图片文件:{}",fileName);
-
+        //创建一个目录对象
         File dir = new File(basePath);
+        //判断文件是否存在
         if (!dir.exists()) {
+            //不存在创建
             dir.mkdirs();
         }
 

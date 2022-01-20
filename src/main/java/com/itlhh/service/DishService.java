@@ -2,7 +2,7 @@ package com.itlhh.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itlhh.entity.Dish;
-import com.itlhh.entity.DishDto;
+import com.itlhh.dto.DishDto;
 
 import java.util.List;
 

@@ -1,17 +1,15 @@
 package com.itlhh.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itlhh.entity.Dish;
-import com.itlhh.entity.DishDto;
+import com.itlhh.dto.DishDto;
 import com.itlhh.entity.DishFlavor;
 import com.itlhh.exception.CustomException;
 import com.itlhh.mapper.DishMapper;
 import com.itlhh.service.DishFlavorService;
 import com.itlhh.service.DishService;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Autowired
     private DishFlavorService dishFlavorService;
 
+    /**
+     * 新增菜品，同时插入菜品对应的口味数据，需要操作两张表：dish、dish_flavor
+     * @param dishDto
+     */
     @Override
     public void saveWithFlavor(DishDto dishDto) {
         //保存菜品信息
@@ -53,6 +55,11 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(flavors);
     }
 
+    /**
+     * 根据id查询菜品信息和对应的口味信息
+     * @param id
+     * @return
+     */
     @Override
     public DishDto getByIdWithFlavor(Long id) {
         //查询菜品基本信息，从dish表查询

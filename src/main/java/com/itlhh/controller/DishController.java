@@ -1,13 +1,11 @@
 package com.itlhh.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itlhh.common.R;
 import com.itlhh.entity.Category;
 import com.itlhh.entity.Dish;
-import com.itlhh.entity.DishDto;
+import com.itlhh.dto.DishDto;
 import com.itlhh.service.CategoryService;
 import com.itlhh.service.DishService;
 import com.itlhh.vo.DishVO;
@@ -127,7 +125,7 @@ public class DishController {
     }
 
     /**
-     * 批量删除
+     * 批量删除 单个删除 同时判断是否是起售状态,起售就禁止删除
      * @param ids
      * @return
      */
@@ -147,15 +145,16 @@ public class DishController {
      * @return
      */
     @PostMapping("/status/{status}")
-    public R statusA(@PathVariable int status,Long[] ids){
+    public R<String> statusA(@PathVariable int status,Long[] ids){
         log.info("ids==={}",ids);
-
+        //获取到前端传来的id 遍历ids
         for (Long id : ids) {
-            Dish byId = dishService.getById(id);
+            //通过id获取到dish对象
+            Dish dish = dishService.getById(id);
+            //将前端获取的status状态设置到dish里面
+            dish.setStatus(status);
 
-            byId.setStatus(status);
-
-            dishService.updateById(byId);
+            dishService.updateById(dish);
         }
 
         return R.success("停售成功");

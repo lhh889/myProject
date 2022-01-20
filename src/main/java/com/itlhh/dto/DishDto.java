@@ -1,6 +1,8 @@
-package com.itlhh.entity;
+package com.itlhh.dto;
 
 
+import com.itlhh.entity.Dish;
+import com.itlhh.entity.DishFlavor;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
