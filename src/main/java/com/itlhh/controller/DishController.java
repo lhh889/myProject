@@ -1,5 +1,6 @@
 package com.itlhh.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itlhh.common.R;
@@ -48,6 +49,7 @@ public class DishController {
 
     /**
      * 分页查询以及进行页面补全
+     *
      * @param page
      * @param pageSize
      * @param name
@@ -92,46 +94,49 @@ public class DishController {
             //至此补全完成，写入到resRecords
             resRecords.add(dishVO);
         }
-            res.setRecords(resRecords);
-            return R.success(res);
+        res.setRecords(resRecords);
+        return R.success(res);
     }
 
     /**
      * 根据id查询数据,回显数据
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
-    public R<DishDto> get(@PathVariable Long id){
+    public R<DishDto> get(@PathVariable Long id) {
 
         DishDto dishDto = dishService.getByIdWithFlavor(id);
-        if (dishDto!=null){
+        if (dishDto != null) {
             return R.success(dishDto);
         }
         return R.error("没有该信息");
     }
 
     /**
-     *修改数据
+     * 修改数据
+     *
      * @param dishDto
      * @return
      */
     @PutMapping
-   public R<String> update(@RequestBody DishDto dishDto){
+    public R<String> update(@RequestBody DishDto dishDto) {
 
-            dishService.updateWithFlavor(dishDto);
-            return R.success("修改成功");
+        dishService.updateWithFlavor(dishDto);
+        return R.success("修改成功");
 
     }
 
     /**
      * 批量删除 单个删除 同时判断是否是起售状态,起售就禁止删除
+     *
      * @param ids
      * @return
      */
     @DeleteMapping
-    public R<String> delete(@RequestParam  List<Long> ids){
-        log.info("ids====={}",ids);
+    public R<String> delete(@RequestParam List<Long> ids) {
+        log.info("ids====={}", ids);
 
         dishService.removeWithDish(ids);
 
@@ -140,13 +145,14 @@ public class DishController {
 
     /**
      * 修改起售停售
+     *
      * @param status
      * @param ids
      * @return
      */
     @PostMapping("/status/{status}")
-    public R<String> statusA(@PathVariable int status,Long[] ids){
-        log.info("ids==={}",ids);
+    public R<String> statusA(@PathVariable int status, Long[] ids) {
+        log.info("ids==={}", ids);
         //获取到前端传来的id 遍历ids
         for (Long id : ids) {
             //通过id获取到dish对象
@@ -158,5 +164,28 @@ public class DishController {
         }
 
         return R.success("停售成功");
+    }
+
+    /**
+     * 根据条件查询对应的菜品数据
+     *
+     * @param dish
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        //根据菜品分类categoryid进行查询
+        queryWrapper.eq(Dish::getCategoryId, dish.getCategoryId());
+        //限定菜品的的状态为起售状态
+        queryWrapper.eq(Dish::getStatus, 1);
+        //最后对查询的结果进行排序(sort升序排序,sort相同进行修改时间倒序排序)
+        queryWrapper.orderByAsc(Dish::getSort)
+                .orderByDesc(Dish::getUpdateTime);
+
+        List<Dish> dishList = dishService.list(queryWrapper);
+
+        return R.success(dishList);
     }
 }
