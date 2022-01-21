@@ -102,6 +102,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(flavors);
     }
 
+    /**
+     * 根据id删除菜品和菜品对应的关系表,同时判断菜品状态为起售不能删除
+     * @param ids
+     */
     @Override
     public void removeWithDish(List<Long> ids) {
         //查询菜品状态，确定是否可用删除

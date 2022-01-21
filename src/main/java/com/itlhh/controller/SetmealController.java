@@ -56,8 +56,10 @@ public class SetmealController {
         //执行分页查询
         setmealService.page(pageInfo, queryWrapper);
 
-
         Page<SetmealVo> res = new Page<>();
+
+        res.setTotal(pageInfo.getTotal());
+        res.setCurrent(pageInfo.getCurrent());
 
         List<Setmeal> records = pageInfo.getRecords();
         List<SetmealVo> records1 = new ArrayList<>();
@@ -87,12 +89,13 @@ public class SetmealController {
 
     /**
      * 套餐新增
+     *
      * @param setmealDto
      * @return
      */
     @PostMapping
-    public R<String>  save(@RequestBody SetmealDto setmealDto){
-        log.info("套餐新增的是:{}",setmealDto);
+    public R<String> save(@RequestBody SetmealDto setmealDto) {
+        log.info("套餐新增的是:{}", setmealDto);
 
         setmealService.saveWithDish(setmealDto);
 
@@ -101,13 +104,14 @@ public class SetmealController {
 
     /**
      * 修改起售 停售状态
+     *
      * @param status
      * @param ids
      * @return
      */
     @PostMapping("/status/{status}")
-    public R status(@PathVariable int status,Long[] ids){
-        log.info("状态为:{},获取的ids是:{}",status,ids);
+    public R status(@PathVariable int status, Long[] ids) {
+        log.info("状态为:{},获取的ids是:{}", status, ids);
 
         //遍历ids
         for (Long id : ids) {
@@ -119,5 +123,48 @@ public class SetmealController {
         }
 
         return R.success("修改成功");
+    }
+
+    /**
+     * 删除套餐及套餐关联的信息,同时判断是否是起售状态,起售不能删除
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> del(@RequestParam List<Long> ids) {
+        log.info("接收到的删除id是:{}", ids);
+
+        setmealService.delWithSetmeal(ids);
+
+        return R.success("删除成功");
+    }
+
+    /**
+     * 根据id查询数据 回显数据
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<SetmealDto> get(@PathVariable Long id) {
+        log.info("获取到的修改id是:{}", id);
+
+        SetmealDto setmealDto = setmealService.getWithId(id);
+
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 更新套餐信息
+     * @param setmealDto
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDto setmealDto) {
+        log.info("修改的数据是:{}", setmealDto);
+
+        setmealService.upWithSetmeal(setmealDto);
+        return R.success("套餐更新成功");
     }
 }
