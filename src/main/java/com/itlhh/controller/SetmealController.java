@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itlhh.common.R;
+import com.itlhh.dto.SetmealDto;
 import com.itlhh.entity.Category;
 import com.itlhh.entity.Setmeal;
 import com.itlhh.service.CategoryService;
@@ -84,9 +85,39 @@ public class SetmealController {
         return R.success(res);
     }
 
+    /**
+     * 套餐新增
+     * @param setmealDto
+     * @return
+     */
     @PostMapping
-    public R  save(@RequestBody Setmeal setmeal){
-        log.info("套餐新增的是:{}",setmeal);
-        return null;
+    public R<String>  save(@RequestBody SetmealDto setmealDto){
+        log.info("套餐新增的是:{}",setmealDto);
+
+        setmealService.saveWithDish(setmealDto);
+
+        return R.success("新增套餐成功");
+    }
+
+    /**
+     * 修改起售 停售状态
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public R status(@PathVariable int status,Long[] ids){
+        log.info("状态为:{},获取的ids是:{}",status,ids);
+
+        //遍历ids
+        for (Long id : ids) {
+            //通过id获取对象
+            Setmeal setmeal = setmealService.getById(id);
+            setmeal.setStatus(status);
+
+            setmealService.updateById(setmeal);
+        }
+
+        return R.success("修改成功");
     }
 }
